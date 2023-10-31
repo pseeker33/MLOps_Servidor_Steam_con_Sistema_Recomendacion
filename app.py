@@ -9,20 +9,20 @@ import uvicorn #servidor ASGI(Asynchronous Server Gateway Interface)
 from collections import Counter
 
 # Consulta 'developer(desarrollador: str)'
-df_steam_games_developer_desarrollador = pd.read_parquet('../Data/df_steam_games_developer_desarrollador.parquet')
+df_steam_games_developer_desarrollador = pd.read_parquet('./Data/df_steam_games_developer_desarrollador.parquet')
 
 # Consulta 'userdata(user_id:str)
-df_user_items_userdata_user_id_respuesta1 = pd.read_parquet('../Data/df_user_items_userdata_user_id_respuesta1.parquet')
-df_steam_games_userdata_user_id_respuesta1 = pd.read_parquet('../Data/df_steam_games_userdata_user_id_respuesta1.parquet')
-df_user_reviews_userdata_user_id_respuesta2 = pd.read_parquet('../Data/df_user_reviews_userdata_user_id_respuesta2.parquet')
+df_user_items_userdata_user_id_respuesta1 = pd.read_parquet('./Data/df_user_items_userdata_user_id_respuesta1.parquet')
+df_steam_games_userdata_user_id_respuesta1 = pd.read_parquet('./Data/df_steam_games_userdata_user_id_respuesta1.parquet')
+df_user_reviews_userdata_user_id_respuesta2 = pd.read_parquet('./Data/df_user_reviews_userdata_user_id_respuesta2.parquet')
 
 # Consulta 'UserForGenre(genero: str)'
-df_steam_games_userforgenre_genero = pd.read_parquet('../Data/df_steam_games_userforgenre_genero.parquet')
-df_user_items_userforgenre_genero = pd.read_parquet('../Data/df_user_items_userforgenre_genero.parquet')
+df_steam_games_userforgenre_genero = pd.read_parquet('./Data/df_steam_games_userforgenre_genero.parquet')
+df_user_items_userforgenre_genero = pd.read_parquet('./Data/df_user_items_userforgenre_genero.parquet')
 
 # Consulta 'best_developer_year(año : int)'
-df_user_reviews_best_developer_year_año = pd.read_parquet('../Data/df_user_reviews_best_developer_year_año.parquet')
-df_steam_games_best_developer_year_año = pd.read_parquet('../Data/df_steam_games_best_developer_year_año.parquet')
+df_user_reviews_best_developer_year_año = pd.read_parquet('./Data/df_user_reviews_best_developer_year_año.parquet')
+df_steam_games_best_developer_year_año = pd.read_parquet('./Data/df_steam_games_best_developer_year_año.parquet')
 
 # Consulta 'developer_reviews_analysis( desarrolladora: str)'
 # Esta consulta reutiliza los dataframes:
@@ -30,7 +30,7 @@ df_steam_games_best_developer_year_año = pd.read_parquet('../Data/df_steam_game
 #   df_user_reviews_best_developer_year_año
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
-df_recommendacion_usuario_user_id = pd.read_parquet('../Data/df_recommendacion_usuario_user_id.parquet')
+df_recommendacion_usuario_user_id = pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
 
 
 app = FastAPI() #crea un objeto app(una instancia de FastAPI), que se usará para definir las rutas y las operaciones que realizará la API.
