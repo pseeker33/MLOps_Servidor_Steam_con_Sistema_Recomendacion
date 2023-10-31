@@ -71,7 +71,7 @@ Hoy en día en el mercado de consolas compiten Sony con su Playstation, Microsof
 </p>
 
 
-**`El Rol del Desarrollo en la Industria de Videojuegoss`**
+**`El Rol del Desarrollo en la Industria de Videojuegos`**  
 La industria del videojuego es un sector económico que implica el desarrollo, distribución y venta de videojuegos, así como todo el hardware asociado  
 De esa cadena, el desarrollo es la etapa mas importante, pues si bien es similar al de cualquier desarrollo de software, aquí el componente artístico toma mucha más fuerza debido a la importancia de la interfaz, la banda sonora, la historia, el diseño de personajes, etc  
 
@@ -84,7 +84,7 @@ De esa cadena, el desarrollo es la etapa mas importante, pues si bien es similar
 </br>
 
   
-**Es menester destacar que, si bien los grandes conglomerados de desarrolladores lideran el mercado del videojuego dejando poco espacio de maniobra para las pequeñas y medianas empresas, tambien es cierto que el dinamismo que caracteriza a esta industria  sumado a los continuos avances tecnologicos ha creado y seguira creando oportunidades de negocios a cada paso y en todo momento.**  
+**Es menester puntualizar que, si bien los grandes conglomerados de desarrolladores lideran el mercado del videojuego y que esto deja poco espacio de maniobra para las pequeñas y medianas empresas, tambien es cierto que el dinamismo que caracteriza a esta industria, sumado a los continuos avances tecnologicos esta creando actualmente y seguira creando oportunidades de negocios a cada paso y en todo momento.**  
 <span style="float:right;">[arriba](#tabla-de-contenido)</span>  
 
 #
