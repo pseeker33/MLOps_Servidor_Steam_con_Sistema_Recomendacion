@@ -111,8 +111,9 @@ A partir de esa data, y aplicando procesos de **Data Preparation**, **Data Model
 
 <!--## 3. **<u>Estructura del Repositorio</u>** -->
 <br>
+
 <p align="center">  
-    <img src="./src/estructura_repo.PNG"  height=500>    
+    <img src="./src/estructura_repo.png"  height=500>    
 </p>
 
 <br>
