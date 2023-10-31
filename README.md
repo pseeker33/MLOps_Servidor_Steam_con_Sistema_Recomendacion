@@ -117,7 +117,7 @@ A partir de esa data, y aplicando procesos de **Data Preparation**, **Data Model
 
 <br>
 
-**`Carpeta 'Steam app'.-`** almacena el archivo 'app.py'que implementa la interfaz de la API, y los procesos para los endpoints de cada consulta
+**`Archivo 'app.py'.-`** en este archivo se implementaron la interfaz de la API y los procesos para los endpoints de cada consulta
 
 **`Carpeta 'Data Prep'.-`** contiene todos los notebooks usados para el proceso de preparacion de datos (limpieza y transformacion), tanto para las consultas estandar como la consulta al sistema de recomendacion:
 * **`Notebook 'australian_users_items_json.ipynb':`** data prep (limpieza y transformacion) del dataset 'australian_users_items_json.ipynb'.
