@@ -161,7 +161,7 @@ Esta es la etapa principal del proyecto, donde se realizo la mayor parte del tra
 
 A continuacion se muestran de forma resumida los tratamientos hechos en cada dataset:
 
-**`Notebook No'australian_users_items_json.ipynb':`**  
+**`Notebook 'australian_users_items_json.ipynb':`**  
 
 <p align="left">  
     <img src="./src/users_items_crudo.png"  height=300>    

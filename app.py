@@ -236,17 +236,22 @@ def recomendacion_usuario(user_id: str):
         columnas_a_mantener = ['user_id','item_id']
         df_colaborativo = df_recommendacion_usuario_user_id[columnas_a_mantener]
         user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
+        df_colaborativo = None
         del df_colaborativo
+
 
         # Calcular similitud de coseno entre usuarios
         user_similarity = cosine_similarity(user_item_matrix)
         user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)
+        user_similarity = None
         del user_similarity
+
 
         # Procesamos las Recomendaciones
 
         # Obtener las puntuaciones de similitud para el usuario especificado
         user_scores = user_similarity_df.loc[user_id]
+        user_similarity_df = None
         del user_similarity_df
 
         # Ordenar los usuarios por similitud en orden descendente
@@ -255,12 +260,15 @@ def recomendacion_usuario(user_id: str):
         # Filtrar los juegos que el usuario ya ha jugado
         user_played_games = user_item_matrix.loc[user_id]
         already_played = user_played_games[user_played_games == 1].index
+        user_played_games = None
         del user_played_games
 
         # Obtener recomendaciones para el usuario
         recommendations = user_item_matrix.columns.difference(already_played)
+        already_played = None
         del already_played
         user_recommendations = user_scores.dot(user_item_matrix.loc[:, recommendations])
+        user_scores = None
         del user_scores
 
         # Ordenar las recomendaciones por puntaje en orden descendente
@@ -268,6 +276,7 @@ def recomendacion_usuario(user_id: str):
 
         # Capturar las 5 primeras recomendaciones y convertir la serie a DF
         df_top5_recomendaciones = user_recommendations.head(5).reset_index()
+        user_recommendations = None
         del user_recommendations
 
         # Cambiar el nombre de las columnas del DataFrame
@@ -280,6 +289,7 @@ def recomendacion_usuario(user_id: str):
 
         # Mostrar el DataFrame resultante
         lst_top5_recomendaciones = df_top5_recomendaciones.reset_index(drop=True).tolist()
+        df_top5_recomendaciones = None
         del df_top5_recomendaciones
         response = f'Recomendaciones para el usuario {user_id}: {lst_top5_recomendaciones}'
 
@@ -292,7 +302,7 @@ def recomendacion_usuario(user_id: str):
 # Run the API with uvicorn
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
-    
+
 
 
 '''
