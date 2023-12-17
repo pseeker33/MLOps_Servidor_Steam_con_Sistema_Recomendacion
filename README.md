@@ -14,7 +14,13 @@
 </p>
 -->
 
-# <h1 align=center>**`Hoover Pedro Zavala`**</h1><div style="text-align: center"><font size="3">**`Data Engineering | Data Science | BI & Data Analytics`** </font> </div>
+# <h1 align=center>**`Hoover Pedro Zavala`**</h1><h4 align=center>**`Data Analysis | Data Engineering | Data Modeling | Data Science | BI & Data Analytics`**</h1>
+
+
+<!--
+<div style="text-align: center"><font size="3">**`Data Analysis | Data Engineering | Data Modeling | Data Science | BI & Data Analytics`** </font> </div>
+-->
+
 <!--
 # <h1 align=center>**`Hoover Zavala`**</h1><h3 align=center>`Data Engineering | BI & Data Analytics | Data Science`</h3>
 -->
