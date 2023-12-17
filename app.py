@@ -241,12 +241,10 @@ def recomendacion_usuario(user_id: str):
         user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
         del df_colaborativo
 
-
         # Calcular similitud de coseno entre usuarios
         user_similarity = cosine_similarity(user_item_matrix)
         user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)
         del user_similarity
-
 
         # Procesamos las Recomendaciones
 
@@ -295,9 +293,9 @@ def recomendacion_usuario(user_id: str):
         return {"error": str(e)}
 
 
-    # Run the API with uvicorn
-    if __name__ == '__main__':
-        uvicorn.run(app, host='127.0.0.1', port=8000)
+# Run the API with uvicorn
+if __name__ == '__main__':
+    uvicorn.run(app, host='127.0.0.1', port=8000)
 
 
 
