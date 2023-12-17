@@ -8,6 +8,47 @@ from fastapi import FastAPI
 import uvicorn #servidor ASGI(Asynchronous Server Gateway Interface)
 from collections import Counter
 
+# Funciones para cargar datos
+
+
+
+# Consulta 'developer(desarrollador: str)'
+def load_developer_data():
+    return pd.read_parquet('./Data/df_steam_games_developer_desarrollador.parquet')
+
+# Consulta 'userdata(user_id:str)
+def load_userdata_data():
+    return (
+        pd.read_parquet('./Data/df_user_items_userdata_user_id_respuesta1.parquet'),
+        pd.read_parquet('./Data/df_steam_games_userdata_user_id_respuesta1.parquet'),
+        pd.read_parquet('./Data/df_user_reviews_userdata_user_id_respuesta2.parquet')
+    )
+
+# Consulta 'UserForGenre(genero: str)'
+def load_userforgenre_data():
+    return (
+        pd.read_parquet('./Data/df_steam_games_userforgenre_genero.parquet'),
+        pd.read_parquet('./Data/df_user_items_userforgenre_genero.parquet')
+    )
+
+
+# Consulta 'developer_reviews_analysis( desarrolladora: str)'
+# Esta consulta reutiliza los dataframes:
+#   df_steam_games_best_developer_year_año
+#   df_user_reviews_best_developer_year_año
+
+# Consulta 'best_developer_year(año : int)'
+def load_best_developer_year_data():
+    return (
+        pd.read_parquet('./Data/df_user_reviews_best_developer_year_año.parquet'),
+        pd.read_parquet('./Data/df_steam_games_best_developer_year_año.parquet')
+    )
+
+# Consulta 'recomendacion_usuario(user_id: srt)'
+def load_recomendacion_usuario_data():
+    return pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
+
+'''
 # Consulta 'developer(desarrollador: str)'
 df_steam_games_developer_desarrollador = pd.read_parquet('./Data/df_steam_games_developer_desarrollador.parquet')
 
@@ -31,6 +72,7 @@ df_steam_games_best_developer_year_año = pd.read_parquet('./Data/df_steam_games
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
 df_recommendacion_usuario_user_id = pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
+'''
 
 
 app = FastAPI() #crea un objeto app(una instancia de FastAPI), que se usará para definir las rutas y las operaciones que realizará la API.
@@ -40,9 +82,13 @@ app = FastAPI() #crea un objeto app(una instancia de FastAPI), que se usará par
             ################################################
             ### CONSULTA 'developer(desarrollador: str)' ###
             ################################################ 
+#Inputs: Valve
+
 @app.get('/developer/')
 def developer(desarrollador: str):
     try:
+        df_steam_games_developer_desarrollador = load_developer_data()
+
         # Asegúrate de convertir 'release_date' a objetos datetime
         df_steam_games_developer_desarrollador['release_date'] = pd.to_datetime(df_steam_games_developer_desarrollador['release_date'], format='%Y-%m-%d')
 
@@ -71,7 +117,7 @@ def developer(desarrollador: str):
     except Exception as e:
         return {"error": str(e)}
 
-
+'''
             ########################################
             ### CONSULTA 'userdata(user_id:str)' ###
             ########################################
@@ -290,6 +336,7 @@ def recomendacion_usuario(user_id: str):
         return response
     except Exception as e:
         return {"error": str(e)}
+'''
 
 #Input: '76561197970982479'
 
