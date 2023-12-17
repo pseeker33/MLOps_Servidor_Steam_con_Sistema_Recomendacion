@@ -49,9 +49,6 @@ def load_recomendacion_usuario_data():
     return pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
 
 '''
-# Consulta 'developer(desarrollador: str)'
-df_steam_games_developer_desarrollador = pd.read_parquet('./Data/df_steam_games_developer_desarrollador.parquet')
-
 # Consulta 'userdata(user_id:str)
 df_user_items_userdata_user_id_respuesta1 = pd.read_parquet('./Data/df_user_items_userdata_user_id_respuesta1.parquet')
 df_steam_games_userdata_user_id_respuesta1 = pd.read_parquet('./Data/df_steam_games_userdata_user_id_respuesta1.parquet')
@@ -67,8 +64,8 @@ df_steam_games_best_developer_year_año = pd.read_parquet('./Data/df_steam_games
 
 # Consulta 'developer_reviews_analysis( desarrolladora: str)'
 # Esta consulta reutiliza los dataframes:
-#   df_steam_games_best_developer_year_año
 #   df_user_reviews_best_developer_year_año
+#   df_steam_games_best_developer_year_año
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
 df_recommendacion_usuario_user_id = pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
@@ -97,6 +94,7 @@ def developer(desarrollador: str):
 
         # Filtrar el DataFrame para obtener registros de la empresa desarrolladora especificada
         df_desarrolladora = df_steam_games_developer_desarrollador[df_steam_games_developer_desarrollador['developer'] == desarrollador]
+        del df_steam_games_developer_desarrollador
 
         # Calcular la cantidad de elementos por año
         elementos_por_anio = df_desarrolladora['año'].value_counts().reset_index()
@@ -104,26 +102,40 @@ def developer(desarrollador: str):
 
         # Calcular el porcentaje de contenido "Free" por año
         contenidos_free_por_anio = df_desarrolladora['año'][df_desarrolladora['genres'].str.contains('Free to Play')].value_counts().reset_index()
+        del df_desarrolladora
         contenidos_free_por_anio.columns = ['Año', 'Contenido Free']
 
         # Combinar los dataFrames de cantidad de elementos y contenido "Free"
         resultados = elementos_por_anio.merge(contenidos_free_por_anio, on='Año', how='left').fillna(0)
+        del elementos_por_anio
+        del contenidos_free_por_anio
         resultados['Contenido Free'] = (resultados['Contenido Free'] / resultados['Cantidad de Items'] * 100).astype(int).astype(str) + '%'
 
         respuesta1 = f"Desarrollador: {desarrollador}"
         datos_por_anio = [{"Año": int(row['Año']), "Items": row['Cantidad de Items'], "Porcentaje Free": row['Contenido Free']} for index, row in resultados.iterrows()]
+        del resultados
         respuesta2 = f"Cantidad de items y contenido free por año: {datos_por_anio}"
         return respuesta1, respuesta2
+        del datos_por_anio
+        del respuesta1
+        del respuesta2
+    
+    
     except Exception as e:
         return {"error": str(e)}
 
-'''
+
             ########################################
             ### CONSULTA 'userdata(user_id:str)' ###
             ########################################
+    
+#Inputs: '76561197970982479'
+ 
 @app.get('/userdata/')
 def userdata(user_id:str):
     try:
+        df_user_items_userdata_user_id_respuesta1, df_steam_games_userdata_user_id_respuesta1, df_user_reviews_userdata_user_id_respuesta2 = load_userdata_data()
+
         # RESPUESTA 1        
         # Filtra las filas correspondientes al 'user_id' en df_user_items_userdata_user_id_respuesta1.
         user_items = df_user_items_userdata_user_id_respuesta1[df_user_items_userdata_user_id_respuesta1['user_id'] == user_id]
@@ -137,6 +149,9 @@ def userdata(user_id:str):
         # Calcula la cantidad total gastada por el usuario sumando los precios de los juegos.
         total_gastado = user_game_prices['price'].sum()
         resp1 = f"El usuario {user_id} ha gastado un total de ${total_gastado:.2f} en juegos."
+        del user_game_prices
+        del total_gastado
+
 
         # RESPUESTA 2
         # Filtra las recomendaciones del usuario con el 'User_id' especificado.
@@ -145,19 +160,27 @@ def userdata(user_id:str):
         # Calcula el porcentaje de recomendación en base a las recomendaciones del usuario.
         if len(user_recommendations) > 0:
             porcentaje_recomendacion = (user_recommendations['recommend'].sum() / len(user_recommendations)) * 100
+            del user_recommendations
         else:
             porcentaje_recomendacion = 0
         resp2 = f"El porcentaje de recomendaciones positivas dadas por el usuario {user_id} es de: {porcentaje_recomendacion:.2f}%"
+        del porcentaje_recomendacion
 
         # RESPUESTA 3
         # Calcula la cantidad de elementos para ese usuario.
         cantidad_elementos = len(user_items)
+        del user_items
 
         # El resultado 'cantidad_elementos' contendrá la cantidad de elementos para el usuario.
         resp3 = f"El usuario {user_id} tiene {cantidad_elementos} juegos en su catalogo."
+        del cantidad_elementos
 
         #Retornamos las respuestas
         return resp1, resp2, resp3
+        del resp1
+        del resp2
+        del resp3
+    
     except Exception as e:
         return {"error": str(e)}
 
@@ -165,11 +188,17 @@ def userdata(user_id:str):
             ############################################
             ### CONSULTA 'UserForGenre(genero: str)' ###
             ############################################
+    
+#Inputs: 'Action', 'Casual', 'Indie', 'Simulation'
+    
 @app.get('/UserForGenre/')
 def UserForGenre(genero: str):
     try:
+        df_steam_games_userforgenre_genero, df_user_items_userforgenre_genero = load_userforgenre_data()
+
         # Filtrar juegos por género
         genre_games = df_steam_games_userforgenre_genero[df_steam_games_userforgenre_genero['genres'].str.contains(genero, case=False, na=False)]
+        del df_steam_games_userforgenre_genero
 
         if len(genre_games) == 0:
             response = {"No se encontraron juegos para el género especificado"}
@@ -177,7 +206,8 @@ def UserForGenre(genero: str):
         else:
             # Combinar información del usuario y juegos por 'item_id'
             merged_data = df_user_items_userforgenre_genero.merge(genre_games, left_on='item_id', right_on='id')
-            
+            del genre_games
+
             # Convertir 'release_date' a año
             merged_data['release_date'] = pd.to_datetime(merged_data['release_date']).dt.year
 
@@ -186,15 +216,20 @@ def UserForGenre(genero: str):
 
             # Filtrar los datos solo para el usuario con más horas jugadas en el género dado
             user_data = merged_data[merged_data['user_id'] == user_with_most_playtime]
+            del merged_data
 
             # Calcular las horas jugadas por año para el usuario
             user_playtime_by_year = user_data.groupby(user_data['release_date'])['playtime_forever'].sum().reset_index()
+            del user_data
             user_playtime_by_year = [{"Año": int(row['release_date']), "Horas": round(int(row['playtime_forever'])/60)} for index, row in user_playtime_by_year.iterrows()]
             resp1 = f"Usuario con más horas jugadas para {genero}: {user_with_most_playtime}"
-            #resp1 = "Usuario con más horas jugadas para {}".format(genero): user_with_most_playtime
+            del user_with_most_playtime
             resp2 = f"Horas jugadas por año: {user_playtime_by_year}" 
+            del user_playtime_by_year
  
-        return resp1, resp2 
+        return resp1, resp2
+        del resp1
+        del resp2 
     except Exception as e:
         return {"error": str(e)}
 
@@ -204,26 +239,35 @@ def UserForGenre(genero: str):
             #################################################
             ### CONSULTA 'best_developer_year(año : int)' ###
             #################################################
+
+#Inputs: 2015
 @app.get('/best_developer_year/')
 def best_developer_year(año: int):
-    try:        
+    try:
+        df_user_reviews_best_developer_year_año, df_steam_games_best_developer_year_año = load_best_developer_year_data()
+
         # Convertir el campo 'posted' a tipo fecha
         df_user_reviews_best_developer_year_año['posted'] = pd.to_datetime(df_user_reviews_best_developer_year_año['posted'])
 
         # Filtrar las reseñas para el año específico y con 'recommend' igual a True
         filtered_reviews = df_user_reviews_best_developer_year_año[(df_user_reviews_best_developer_year_año['posted'].dt.year == año) & (df_user_reviews_best_developer_year_año['recommend'] == True)]
+        del df_user_reviews_best_developer_year_año
 
         # Filtrar las reseñas con valoraciones positivas o neutrales ('sentiment_analysis' 1 o 2)
         filtered_reviews = filtered_reviews[(filtered_reviews['sentiment_analysis'] == 1) | (filtered_reviews['sentiment_analysis'] == 2)]
             
         if filtered_reviews.empty:
             response = ["No hay registros para el año ingresado"]
+            del filtered_reviews
         else:
             # Unir los datos de las reseñas con los datos de los juegos
             merged_data = filtered_reviews.merge(df_steam_games_best_developer_year_año, left_on='item_id', right_on='id')
+            del df_steam_games_best_developer_year_año
+            del filtered_reviews
 
             # Contar la cantidad de recomendaciones por juego y encontrar el top 3
             top_3_devs = merged_data['developer'].value_counts().head(3)
+            del merged_data
 
             # Eliminar los números
             nombres_devs = list(top_3_devs.keys())
@@ -232,6 +276,7 @@ def best_developer_year(año: int):
             response = [{f'Puesto {i+1}': dev} for i, dev in enumerate(nombres_devs)]
 
         return response
+        del response
     except Exception as e:
         return {"error": str(e)}
 
@@ -241,9 +286,12 @@ def best_developer_year(año: int):
             ###################################################################
 @app.get('/developer_reviews_analysis/')
 def developer_reviews_analysis(desarrolladora: str):
-    try:     
+    try:
+        df_user_reviews_best_developer_year_año, df_steam_games_best_developer_year_año = load_best_developer_year_data()
+
         # Filtrar los juegos de la desarrolladora específicada
         games_in_dev = df_steam_games_best_developer_year_año[df_steam_games_best_developer_year_año['developer'] == desarrolladora]
+        del df_steam_games_best_developer_year_año
 
         # Obtener los IDs de los juegos de la desarrolladora específicada
         game_ids = games_in_dev['id'].tolist()
@@ -251,6 +299,7 @@ def developer_reviews_analysis(desarrolladora: str):
 
         # Filtrar las reseñas para los juegos de la desarrolladora específicada
         filtered_reviews = df_user_reviews_best_developer_year_año[df_user_reviews_best_developer_year_año['item_id'].isin(game_ids)]
+        del df_user_reviews_best_developer_year_año
 
         if len(game_ids) == 0:
             response = {"No se han encontrado juegos para la desarrolladora ingresada"}
@@ -259,16 +308,19 @@ def developer_reviews_analysis(desarrolladora: str):
         else:
             # Crear un contador de valoraciones
             sentiment_counter = Counter(filtered_reviews['sentiment_analysis'])
+            del filtered_reviews
 
             # Obtener la cantidad de reseñas en cada categoría
             negativas = sentiment_counter[0]
             positivas = sentiment_counter[2]
+            del sentiment_counter
 
             # Crear la respuesta en el formato especificado
             response = {f'{desarrolladora} : [Valoraciones Negativas = {negativas}, Valoraciones Positivas = {positivas}]'}
             #response = {desarrolladora: {"Valoraciones Negativas": negativas, "Valoraciones Positivas": positivas}}
         del game_ids
         return response
+        del response
     except Exception as e:
         return {"error": str(e)}
 
@@ -276,11 +328,14 @@ def developer_reviews_analysis(desarrolladora: str):
             ######################################################
             ### CONSULTA 'recomendacion_usuario(user_id: str)' ###
             ######################################################
-
+#Input: '76561197970982479'
+    
 @app.get('/recomendacion_usuario/')
 def recomendacion_usuario(user_id: str):
     # df_colaborativo = df_recommendacion_usuario_user_id
     try:
+        df_recommendacion_usuario_user_id = load_recomendacion_usuario_data()
+    
         # Crear una matriz de usuarios y juegos
         columnas_a_mantener = ['user_id','item_id']
         df_colaborativo = df_recommendacion_usuario_user_id[columnas_a_mantener]
@@ -325,6 +380,7 @@ def recomendacion_usuario(user_id: str):
 
         # Agregar el campo 'nombre de juego' y descartar el resto
         df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recommendacion_usuario_user_id[['item_id', 'item_name']], on='item_id')
+        del df_recommendacion_usuario_user_id
         df_top5_recomendaciones = df_top5_recomendaciones.drop_duplicates()
         df_top5_recomendaciones = df_top5_recomendaciones['item_name']
 
@@ -336,9 +392,9 @@ def recomendacion_usuario(user_id: str):
         return response
     except Exception as e:
         return {"error": str(e)}
-'''
 
-#Input: '76561197970982479'
+
+
 
 # Run the API with uvicorn
 '''    
