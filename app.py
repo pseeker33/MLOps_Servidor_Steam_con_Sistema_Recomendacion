@@ -294,16 +294,9 @@ def recomendacion_usuario(user_id: str):
 #Input: '76561197970982479'
 
 # Run the API with uvicorn
+'''    
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=10000)
-#    uvicorn.run(app, host='127.0.0.1', port=8000)
+    uvicorn.run(app, host='127.0.0.1', port=8000)
 
-
-
-'''
-Ejecucion de la API
-
-En PS ejecutar: uvicorn app:app --reload 
-En Opera tipear:
-    http://127.0.0.1:8000/docs
 '''
