@@ -45,8 +45,17 @@ def load_best_developer_year_data():
     )
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
+#def load_recomendacion_usuario_data():
+#    return pd.read_parquet('./Data/df_recomendacion.parquet')
+
+# Consulta 'recomendacion_usuario(user_id: srt)'
 def load_recomendacion_usuario_data():
-    return pd.read_parquet('./Data/df_recomendacion.parquet')
+    return (
+        pd.read_parquet('./Data/df_user_similarity.parquet'),
+        pd.read_parquet('./Data/df_user_item_matrix.parquet')
+    )
+    pd.read_parquet('./Data/df_recomendacion.parquet')
+
 
 '''
 # Consulta 'recomendacion_usuario(user_id: srt)'
@@ -324,6 +333,73 @@ def developer_reviews_analysis(desarrolladora: str):
 #Input: '76561197970982479'
 @app.get('/recomendacion_usuario/')
 def recomendacion_juego(user_id: str):
+    #user_similarity_df = pd.read_parquet('./Data/df_user_similarity.parquet')
+    #user_item_matrix_df = pd.read_parquet('./Data/df_user_item_matrix.parquet')
+    try:
+        user_similarity_df, user_item_matrix_df = load_recomendacion_usuario_data()
+
+        '''
+        # Crear una matriz de usuarios y juegos
+        columnas_a_mantener = ['user_id','item_id']
+        df_colaborativo = df_colaborativo[columnas_a_mantener]
+        user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
+
+        # Calcular similitud de coseno entre usuarios
+        user_similarity = cosine_similarity(user_item_matrix)
+        user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)'''
+
+        # Procesamos las Recomendaciones
+
+        # Obtener las puntuaciones de similitud para el usuario especificado
+        user_scores = user_similarity_df.loc[user_id]
+
+        # Ordenar los usuarios por similitud en orden descendente
+        user_scores = user_scores.sort_values(ascending=False)
+
+        # Filtrar los juegos que el usuario ya ha jugado
+        user_played_games = user_item_matrix_df.loc[user_id]
+        already_played = user_played_games[user_played_games == 1].index
+
+        # Obtener recomendaciones para el usuario
+        recommendations = user_item_matrix_df.columns.difference(already_played)
+        user_recommendations = user_scores.dot(user_item_matrix_df.loc[:, recommendations])
+
+        # Ordenar las recomendaciones por puntaje en orden descendente
+        user_recommendations = user_recommendations.sort_values(ascending=False)
+
+        # Capturar las 5 primeras recomendaciones y convertir la serie a DF
+        df_top5_recomendaciones = user_recommendations.head(5).reset_index()
+
+        # Cambiar el nombre de las columnas del DataFrame
+        df_top5_recomendaciones.columns = ['item_id', 'score']
+
+        # Convertir 'item_id' a tipo de dato compatible (por ejemplo, int64)
+        df_top5_recomendaciones['item_id'] = df_top5_recomendaciones['item_id'].astype(int)
+
+        # Realizar la operación de merge
+        df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recomendacion[['item_id', 'item_name']], on='item_id')
+
+        # Restaurar el formato original (si es necesario)
+        df_top5_recomendaciones['item_id'] = df_top5_recomendaciones['item_id'].astype(str)
+
+        # Agregar el campo 'nombre de juego' y descartar el resto
+        #df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recomendacion[['item_id', 'item_name']], on='item_id')
+        df_top5_recomendaciones = df_top5_recomendaciones.drop_duplicates()
+        df_top5_recomendaciones = df_top5_recomendaciones['item_name']
+
+        # Mostrar el DataFrame resultante
+        lst_top5_recomendaciones = df_top5_recomendaciones.reset_index(drop=True).tolist()
+        print("Recomendaciones para el usuario", user_id)
+        print(lst_top5_recomendaciones)
+
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
+'''
+def recomendacion_juego(user_id: str):
     #df_colaborativo = df_recomendacion
     try:
         df_colaborativo = load_recomendacion_usuario_data()
@@ -383,11 +459,9 @@ def recomendacion_juego(user_id: str):
         print("Recomendaciones para el usuario", user_id)
         print(lst_top5_recomendaciones)
 
-
     except Exception as e:
         return {"error": str(e)}
-
-
+'''
 
 
 '''
