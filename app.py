@@ -50,7 +50,7 @@ def load_best_developer_year_data():
 def load_recomendacion_usuario_data():
     return (
         pd.read_parquet('./Data/df_user_similarity.parquet'),
-        pd.read_parquet('./Data/df_user_item_matrix.parquet')
+        pd.read_parquet('./Data/df_user_item_matrix.parquet'),
         pd.read_parquet('./Data/df_recomendacion.parquet')
     )
 
