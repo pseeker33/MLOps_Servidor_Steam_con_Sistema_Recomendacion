@@ -48,7 +48,6 @@ def load_best_developer_year_data():
 def load_recomendacion_usuario_data():
     return pd.read_parquet('./Data/df_recommendacion.parquet')
 
-
 '''
 # Consulta 'recomendacion_usuario(user_id: srt)'
 def load_recomendacion_usuario_data():
@@ -318,10 +317,9 @@ def developer_reviews_analysis(desarrolladora: str):
             ######################################################
             ### CONSULTA 'recomendacion_usuario(user_id: str)' ###
             ######################################################
-#Input: '76561197970982479'
     
+#Input: '76561197970982479'
 @app.get('/recomendacion_usuario/')
-
 def recomendacion_juego(user_id: str):
     #df_colaborativo = df_recomendacion
     try:
