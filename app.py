@@ -10,8 +10,6 @@ from collections import Counter
 
 # Funciones para cargar datos
 
-
-
 # Consulta 'developer(desarrollador: str)'
 def load_developer_data():
     return pd.read_parquet('./Data/df_steam_games_developer_desarrollador.parquet')
@@ -54,7 +52,8 @@ def load_recomendacion_usuario_data():
         pd.read_parquet('./Data/df_user_similarity.parquet'),
         pd.read_parquet('./Data/df_user_item_matrix.parquet')
     )
-    pd.read_parquet('./Data/df_recomendacion.parquet')
+
+#pd.read_parquet('./Data/df_recomendacion.parquet')
 
 
 '''
