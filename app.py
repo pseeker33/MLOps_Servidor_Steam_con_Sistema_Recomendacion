@@ -46,26 +46,14 @@ def load_best_developer_year_data():
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
 def load_recomendacion_usuario_data():
-    return pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
+    return pd.read_parquet('./Data/df_recommendacion.parquet')
+
 
 '''
-# Consulta 'userdata(user_id:str)
-df_user_items_userdata_user_id_respuesta1 = pd.read_parquet('./Data/df_user_items_userdata_user_id_respuesta1.parquet')
-df_steam_games_userdata_user_id_respuesta1 = pd.read_parquet('./Data/df_steam_games_userdata_user_id_respuesta1.parquet')
-df_user_reviews_userdata_user_id_respuesta2 = pd.read_parquet('./Data/df_user_reviews_userdata_user_id_respuesta2.parquet')
+# Consulta 'recomendacion_usuario(user_id: srt)'
+def load_recomendacion_usuario_data():
+    return pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
 
-# Consulta 'UserForGenre(genero: str)'
-df_steam_games_userforgenre_genero = pd.read_parquet('./Data/df_steam_games_userforgenre_genero.parquet')
-df_user_items_userforgenre_genero = pd.read_parquet('./Data/df_user_items_userforgenre_genero.parquet')
-
-# Consulta 'best_developer_year(año : int)'
-df_user_reviews_best_developer_year_año = pd.read_parquet('./Data/df_user_reviews_best_developer_year_año.parquet')
-df_steam_games_best_developer_year_año = pd.read_parquet('./Data/df_steam_games_best_developer_year_año.parquet')
-
-# Consulta 'developer_reviews_analysis( desarrolladora: str)'
-# Esta consulta reutiliza los dataframes:
-#   df_user_reviews_best_developer_year_año
-#   df_steam_games_best_developer_year_año
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
 df_recommendacion_usuario_user_id = pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
@@ -189,7 +177,7 @@ def userdata(user_id:str):
             ### CONSULTA 'UserForGenre(genero: str)' ###
             ############################################
     
-#Inputs: 'Action', 'Casual', 'Indie', 'Simulation'
+#Inputs: Action, Casual, Indie, Simulation
     
 @app.get('/UserForGenre/')
 def UserForGenre(genero: str):
@@ -284,6 +272,8 @@ def best_developer_year(año: int):
             ###################################################################
             ### CONSULTA 'developer_reviews_analysis( desarrolladora: str)' ###
             ###################################################################
+
+#Inputs: Valve
 @app.get('/developer_reviews_analysis/')
 def developer_reviews_analysis(desarrolladora: str):
     try:
@@ -331,6 +321,68 @@ def developer_reviews_analysis(desarrolladora: str):
 #Input: '76561197970982479'
     
 @app.get('/recomendacion_usuario/')
+
+def recomendacion_juego(user_id: str):
+    #df_colaborativo = df_recomendacion
+    try:
+        df_colaborativo = load_recomendacion_usuario_data()
+
+        # Crear una matriz de usuarios y juegos
+        columnas_a_mantener = ['user_id','item_id']
+        df_colaborativo = df_colaborativo[columnas_a_mantener]
+        user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
+
+        # Calcular similitud de coseno entre usuarios
+        user_similarity = cosine_similarity(user_item_matrix)
+        user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)
+
+        # Procesamos las Recomendaciones
+
+        # Obtener las puntuaciones de similitud para el usuario especificado
+        user_scores = user_similarity_df.loc[user_id]
+
+        # Ordenar los usuarios por similitud en orden descendente
+        user_scores = user_scores.sort_values(ascending=False)
+
+        # Filtrar los juegos que el usuario ya ha jugado
+        user_played_games = user_item_matrix.loc[user_id]
+        already_played = user_played_games[user_played_games == 1].index
+
+        # Obtener recomendaciones para el usuario
+        recommendations = user_item_matrix.columns.difference(already_played)
+        user_recommendations = user_scores.dot(user_item_matrix.loc[:, recommendations])
+
+        # Ordenar las recomendaciones por puntaje en orden descendente
+        user_recommendations = user_recommendations.sort_values(ascending=False)
+
+        # Capturar las 5 primeras recomendaciones y convertir la serie a DF
+        df_top5_recomendaciones = user_recommendations.head(5).reset_index()
+
+        # Cambiar el nombre de las columnas del DataFrame
+        df_top5_recomendaciones.columns = ['item_id', 'score']
+
+        # Agregar el campo 'nombre de juego' y descartar el 
+        df_recomendacion = load_recomendacion_usuario_data()
+        
+        df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recomendacion[['item_id', 'item_name']], on='item_id')
+        df_top5_recomendaciones = df_top5_recomendaciones.drop_duplicates()
+        df_top5_recomendaciones = df_top5_recomendaciones['item_name']
+
+        # Mostrar el DataFrame resultante
+        lst_top5_recomendaciones = df_top5_recomendaciones.reset_index(drop=True).tolist()
+        #print(df_top5_recomendaciones.to_list)
+        lst_top5_recomendaciones
+        print("Recomendaciones para el usuario", user_id)
+        print(lst_top5_recomendaciones)
+
+
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
+
+'''
 def recomendacion_usuario(user_id: str):
     # df_colaborativo = df_recommendacion_usuario_user_id
     try:
@@ -392,7 +444,7 @@ def recomendacion_usuario(user_id: str):
         return response
     except Exception as e:
         return {"error": str(e)}
-
+'''
 
 
 
