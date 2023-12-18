@@ -51,9 +51,9 @@ def load_recomendacion_usuario_data():
     return (
         pd.read_parquet('./Data/df_user_similarity.parquet'),
         pd.read_parquet('./Data/df_user_item_matrix.parquet')
+        pd.read_parquet('./Data/df_recomendacion.parquet')
     )
 
-#pd.read_parquet('./Data/df_recomendacion.parquet')
 
 
 '''
@@ -299,6 +299,7 @@ def developer_reviews_analysis(desarrolladora: str):
 
         # Filtrar las reseñas para los juegos de la desarrolladora específicada
         filtered_reviews = df_user_reviews_best_developer_year_año[df_user_reviews_best_developer_year_año['item_id'].isin(game_ids)]
+        df_user_reviews_best_developer_year_año = None
         del df_user_reviews_best_developer_year_año
 
         if len(game_ids) == 0:
@@ -335,7 +336,7 @@ def recomendacion_juego(user_id: str):
     #user_similarity_df = pd.read_parquet('./Data/df_user_similarity.parquet')
     #user_item_matrix_df = pd.read_parquet('./Data/df_user_item_matrix.parquet')
     try:
-        user_similarity_df, user_item_matrix_df = load_recomendacion_usuario_data()
+        user_similarity_df, user_item_matrix_df, df_recomendacion = load_recomendacion_usuario_data()
 
         '''
         # Crear una matriz de usuarios y juegos
