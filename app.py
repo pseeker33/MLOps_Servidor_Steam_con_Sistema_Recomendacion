@@ -131,7 +131,7 @@ def developer(desarrollador: str):
     
 #Inputs: '76561197970982479'
  
-@app.get('/userdata/')
+@app.get('/userdata/')  
 def userdata(user_id:str):
     try:
         df_user_items_userdata_user_id_respuesta1, df_steam_games_userdata_user_id_respuesta1, df_user_reviews_userdata_user_id_respuesta2 = load_userdata_data()
@@ -144,7 +144,7 @@ def userdata(user_id:str):
         user_game_prices = df_steam_games_userdata_user_id_respuesta1[df_steam_games_userdata_user_id_respuesta1['id'].isin(user_items['item_id'])]
         
         # Reemplaza 'Alan' con '0' en la columna 'mi_columna'
-        user_game_prices['price'] = pd.to_numeric(user_game_prices['price'], errors='coerce')
+        user_game_prices.loc[:, 'price'] = pd.to_numeric(user_game_prices['price'], errors='coerce')
 
         # Calcula la cantidad total gastada por el usuario sumando los precios de los juegos.
         total_gastado = user_game_prices['price'].sum()
