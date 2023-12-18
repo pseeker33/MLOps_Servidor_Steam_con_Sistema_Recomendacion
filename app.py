@@ -77,8 +77,8 @@ app = FastAPI() #crea un objeto app(una instancia de FastAPI), que se usará par
             ################################################
             ### CONSULTA 'developer(desarrollador: str)' ###
             ################################################ 
-#Inputs: Valve
 
+#Inputs: Valve
 @app.get('/developer/')
 def developer(desarrollador: str):
     try:
@@ -127,8 +127,7 @@ def developer(desarrollador: str):
             ### CONSULTA 'userdata(user_id:str)' ###
             ########################################
     
-#Inputs: '76561197970982479'
- 
+#Inputs: '76561197970982479' 
 @app.get('/userdata/')  
 def userdata(user_id:str):
     try:
@@ -187,8 +186,7 @@ def userdata(user_id:str):
             ### CONSULTA 'UserForGenre(genero: str)' ###
             ############################################
     
-#Inputs: Action, Casual, Indie, Simulation
-    
+#Inputs: Action, Casual, Indie, Simulation    
 @app.get('/UserForGenre/')
 def UserForGenre(genero: str):
     try:
@@ -352,6 +350,8 @@ def recomendacion_juego(user_id: str):
 
         # Obtener las puntuaciones de similitud para el usuario especificado
         user_scores = user_similarity_df.loc[user_id]
+        user_similarity_df = None
+        del user_similarity_df
 
         # Ordenar los usuarios por similitud en orden descendente
         user_scores = user_scores.sort_values(ascending=False)
@@ -359,16 +359,28 @@ def recomendacion_juego(user_id: str):
         # Filtrar los juegos que el usuario ya ha jugado
         user_played_games = user_item_matrix_df.loc[user_id]
         already_played = user_played_games[user_played_games == 1].index
+        user_played_games = None
+        del user_played_games
 
         # Obtener recomendaciones para el usuario
         recommendations = user_item_matrix_df.columns.difference(already_played)
         user_recommendations = user_scores.dot(user_item_matrix_df.loc[:, recommendations])
+        user_item_matrix_df = None
+        del user_item_matrix_df
+        user_scores = None
+        del user_scores
+        already_played = None
+        del already_played
+        recommendations = None
+        del recommendations
 
         # Ordenar las recomendaciones por puntaje en orden descendente
         user_recommendations = user_recommendations.sort_values(ascending=False)
 
         # Capturar las 5 primeras recomendaciones y convertir la serie a DF
         df_top5_recomendaciones = user_recommendations.head(5).reset_index()
+        user_recommendations = None
+        del user_recommendations
 
         # Cambiar el nombre de las columnas del DataFrame
         df_top5_recomendaciones.columns = ['item_id', 'score']
@@ -378,25 +390,30 @@ def recomendacion_juego(user_id: str):
 
         # Realizar la operación de merge
         df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recomendacion[['item_id', 'item_name']], on='item_id')
+        df_recomendacion = None
+        del df_recomendacion
 
         # Restaurar el formato original (si es necesario)
         df_top5_recomendaciones['item_id'] = df_top5_recomendaciones['item_id'].astype(str)
 
         # Agregar el campo 'nombre de juego' y descartar el resto
         #df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recomendacion[['item_id', 'item_name']], on='item_id')
+
         df_top5_recomendaciones = df_top5_recomendaciones.drop_duplicates()
         df_top5_recomendaciones = df_top5_recomendaciones['item_name']
 
         # Mostrar el DataFrame resultante
         lst_top5_recomendaciones = df_top5_recomendaciones.reset_index(drop=True).tolist()
-        print("Recomendaciones para el usuario", user_id)
-        print(lst_top5_recomendaciones)
+        response = f'Recomendaciones para el usuario {user_id}: {lst_top5_recomendaciones}'
+        df_top5_recomendaciones = None
+        del df_top5_recomendaciones
+        #print("Recomendaciones para el usuario", user_id)
+        #print(lst_top5_recomendaciones)
+        return response
 
 
     except Exception as e:
         return {"error": str(e)}
-
-
 
 '''
 def recomendacion_juego(user_id: str):
