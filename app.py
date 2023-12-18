@@ -46,16 +46,19 @@ def load_best_developer_year_data():
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
 def load_recomendacion_usuario_data():
-    return pd.read_parquet('./Data/df_recommendacion.parquet')
+    return pd.read_parquet('./Data/df_recomendacion.parquet')
 
 '''
 # Consulta 'recomendacion_usuario(user_id: srt)'
+#df_recomendacion = pd.read_parquet('./Data/df_recommendacion.parquet')
+
+# Consulta 'recomendacion_usuario(user_id: srt)'
 def load_recomendacion_usuario_data():
-    return pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
+    return pd.read_parquet('./Data/df_recomendacion_usuario_user_id.parquet')
 
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
-df_recommendacion_usuario_user_id = pd.read_parquet('./Data/df_recommendacion_usuario_user_id.parquet')
+df_recomendacion_usuario_user_id = pd.read_parquet('./Data/df_recomendacion_usuario_user_id.parquet')
 '''
 
 
@@ -329,6 +332,7 @@ def recomendacion_juego(user_id: str):
         columnas_a_mantener = ['user_id','item_id']
         df_colaborativo = df_colaborativo[columnas_a_mantener]
         user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
+        del df_colaborativo
 
         # Calcular similitud de coseno entre usuarios
         user_similarity = cosine_similarity(user_item_matrix)
@@ -338,6 +342,7 @@ def recomendacion_juego(user_id: str):
 
         # Obtener las puntuaciones de similitud para el usuario especificado
         user_scores = user_similarity_df.loc[user_id]
+        del user_similarity
 
         # Ordenar los usuarios por similitud en orden descendente
         user_scores = user_scores.sort_values(ascending=False)
@@ -345,16 +350,22 @@ def recomendacion_juego(user_id: str):
         # Filtrar los juegos que el usuario ya ha jugado
         user_played_games = user_item_matrix.loc[user_id]
         already_played = user_played_games[user_played_games == 1].index
+        del user_played_games
 
         # Obtener recomendaciones para el usuario
         recommendations = user_item_matrix.columns.difference(already_played)
         user_recommendations = user_scores.dot(user_item_matrix.loc[:, recommendations])
+        del user_item_matrix
+        del user_scores
+        del already_played
 
         # Ordenar las recomendaciones por puntaje en orden descendente
         user_recommendations = user_recommendations.sort_values(ascending=False)
 
         # Capturar las 5 primeras recomendaciones y convertir la serie a DF
         df_top5_recomendaciones = user_recommendations.head(5).reset_index()
+        del recommendations
+        del user_recommendations
 
         # Cambiar el nombre de las columnas del DataFrame
         df_top5_recomendaciones.columns = ['item_id', 'score']
@@ -368,8 +379,7 @@ def recomendacion_juego(user_id: str):
 
         # Mostrar el DataFrame resultante
         lst_top5_recomendaciones = df_top5_recomendaciones.reset_index(drop=True).tolist()
-        #print(df_top5_recomendaciones.to_list)
-        lst_top5_recomendaciones
+        del df_top5_recomendaciones
         print("Recomendaciones para el usuario", user_id)
         print(lst_top5_recomendaciones)
 
