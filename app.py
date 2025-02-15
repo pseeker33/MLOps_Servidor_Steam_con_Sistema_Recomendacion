@@ -7,6 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from fastapi import FastAPI
 import uvicorn #servidor ASGI(Asynchronous Server Gateway Interface)
 from collections import Counter
+from fastapi.responses import HTMLResponse
 
 # Funciones para cargar datos
 
@@ -72,6 +73,63 @@ df_recomendacion_usuario_user_id = pd.read_parquet('./Data/df_recomendacion_usua
 
 app = FastAPI() #crea un objeto app(una instancia de FastAPI), que se usará para definir las rutas y las operaciones que realizará la API.
 
+
+# Ruta raíz con mensaje de bienvenida en HTML
+@app.get("/", response_class=HTMLResponse)
+def read_root():
+    welcome_message = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to the Steam Queries API</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                display: flex;
+                justify-content: center;
+                
+                height: 100vh;
+                margin: 0;
+            }
+            .container {
+                text-align: center;
+                background-color: #fff;
+                padding: 2rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                font-size: 3rem;
+                color: #333;
+                margin-bottom: 3rem;
+            }
+            p {
+                font-size: 1.7rem;
+                color: #555;
+            }
+            a {
+                color: #007BFF;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Welcome to the Steam Queries API</h1>
+            <p>This API provides access to various Steam-related data, including game details, user information, and personalized recommendations.</p>
+            <p>Click on this <a href="/docs">link</a> to start making queries to the API!</p>
+        </div>
+    </body>
+    </html>
+    """
+    return welcome_message
 
 
             ################################################
@@ -415,142 +473,12 @@ def recomendacion_juego(user_id: str):
     except Exception as e:
         return {"error": str(e)}
 
-'''
-def recomendacion_juego(user_id: str):
-    #df_colaborativo = df_recomendacion
-    try:
-        df_colaborativo = load_recomendacion_usuario_data()
-
-        # Crear una matriz de usuarios y juegos
-        columnas_a_mantener = ['user_id','item_id']
-        df_colaborativo = df_colaborativo[columnas_a_mantener]
-        user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
-        del df_colaborativo
-
-        # Calcular similitud de coseno entre usuarios
-        user_similarity = cosine_similarity(user_item_matrix)
-        user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)
-
-        # Procesamos las Recomendaciones
-
-        # Obtener las puntuaciones de similitud para el usuario especificado
-        user_scores = user_similarity_df.loc[user_id]
-        del user_similarity
-
-        # Ordenar los usuarios por similitud en orden descendente
-        user_scores = user_scores.sort_values(ascending=False)
-
-        # Filtrar los juegos que el usuario ya ha jugado
-        user_played_games = user_item_matrix.loc[user_id]
-        already_played = user_played_games[user_played_games == 1].index
-        del user_played_games
-
-        # Obtener recomendaciones para el usuario
-        recommendations = user_item_matrix.columns.difference(already_played)
-        user_recommendations = user_scores.dot(user_item_matrix.loc[:, recommendations])
-        del user_item_matrix
-        del user_scores
-        del already_played
-
-        # Ordenar las recomendaciones por puntaje en orden descendente
-        user_recommendations = user_recommendations.sort_values(ascending=False)
-
-        # Capturar las 5 primeras recomendaciones y convertir la serie a DF
-        df_top5_recomendaciones = user_recommendations.head(5).reset_index()
-        del recommendations
-        del user_recommendations
-
-        # Cambiar el nombre de las columnas del DataFrame
-        df_top5_recomendaciones.columns = ['item_id', 'score']
-
-        # Agregar el campo 'nombre de juego' y descartar el 
-        df_recomendacion = load_recomendacion_usuario_data()
-        
-        df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recomendacion[['item_id', 'item_name']], on='item_id')
-        df_top5_recomendaciones = df_top5_recomendaciones.drop_duplicates()
-        df_top5_recomendaciones = df_top5_recomendaciones['item_name']
-
-        # Mostrar el DataFrame resultante
-        lst_top5_recomendaciones = df_top5_recomendaciones.reset_index(drop=True).tolist()
-        del df_top5_recomendaciones
-        print("Recomendaciones para el usuario", user_id)
-        print(lst_top5_recomendaciones)
-
-    except Exception as e:
-        return {"error": str(e)}
-'''
-
-
-'''
-def recomendacion_usuario(user_id: str):
-    # df_colaborativo = df_recommendacion_usuario_user_id
-    try:
-        df_recommendacion_usuario_user_id = load_recomendacion_usuario_data()
-    
-        # Crear una matriz de usuarios y juegos
-        columnas_a_mantener = ['user_id','item_id']
-        df_colaborativo = df_recommendacion_usuario_user_id[columnas_a_mantener]
-        user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
-        del df_colaborativo
-
-        # Calcular similitud de coseno entre usuarios
-        user_similarity = cosine_similarity(user_item_matrix)
-        user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)
-        del user_similarity
-
-        # Procesamos las Recomendaciones
-
-        # Obtener las puntuaciones de similitud para el usuario especificado
-        user_scores = user_similarity_df.loc[user_id]
-        del user_similarity_df
-
-        # Ordenar los usuarios por similitud en orden descendente
-        user_scores = user_scores.sort_values(ascending=False)
-
-        # Filtrar los juegos que el usuario ya ha jugado
-        user_played_games = user_item_matrix.loc[user_id]
-        already_played = user_played_games[user_played_games == 1].index
-        del user_played_games
-
-        # Obtener recomendaciones para el usuario
-        recommendations = user_item_matrix.columns.difference(already_played)
-        del already_played
-        user_recommendations = user_scores.dot(user_item_matrix.loc[:, recommendations])
-        del user_item_matrix
-        del user_scores
-
-        # Ordenar las recomendaciones por puntaje en orden descendente
-        user_recommendations = user_recommendations.sort_values(ascending=False)
-
-        # Capturar las 5 primeras recomendaciones y convertir la serie a DF
-        df_top5_recomendaciones = user_recommendations.head(5).reset_index()
-        del user_recommendations
-
-        # Cambiar el nombre de las columnas del DataFrame
-        df_top5_recomendaciones.columns = ['item_id', 'score']
-
-        # Agregar el campo 'nombre de juego' y descartar el resto
-        df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recommendacion_usuario_user_id[['item_id', 'item_name']], on='item_id')
-        del df_recommendacion_usuario_user_id
-        df_top5_recomendaciones = df_top5_recomendaciones.drop_duplicates()
-        df_top5_recomendaciones = df_top5_recomendaciones['item_name']
-
-        # Mostrar el DataFrame resultante
-        lst_top5_recomendaciones = df_top5_recomendaciones.reset_index(drop=True).tolist()
-        del df_top5_recomendaciones
-        response = f'Recomendaciones para el usuario {user_id}: {lst_top5_recomendaciones}'
-
-        return response
-    except Exception as e:
-        return {"error": str(e)}
-'''
-
 
 
 # Run the API with uvicorn
-'''    
-if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=10000)
-    uvicorn.run(app, host='127.0.0.1', port=8000)
 
-'''
+""" if __name__ == '__main__':
+    # uvicorn.run(app, host='0.0.0.0', port=10000)
+    uvicorn.run(app, host='127.0.0.1', port=8000)
+ """
+
