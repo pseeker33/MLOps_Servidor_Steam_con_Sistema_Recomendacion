@@ -48,27 +48,14 @@ def load_best_developer_year_data():
 #    return pd.read_parquet('./Data/df_recomendacion.parquet')
 
 # Consulta 'recomendacion_usuario(user_id: srt)'
-def load_recomendacion_usuario_data():
+""" def load_recomendacion_usuario_data():
     return (
         pd.read_parquet('./Data/df_user_similarity.parquet'),
         pd.read_parquet('./Data/df_user_item_matrix.parquet'),
         pd.read_parquet('./Data/df_recomendacion.parquet')
     )
+ """
 
-
-
-'''
-# Consulta 'recomendacion_usuario(user_id: srt)'
-#df_recomendacion = pd.read_parquet('./Data/df_recommendacion.parquet')
-
-# Consulta 'recomendacion_usuario(user_id: srt)'
-def load_recomendacion_usuario_data():
-    return pd.read_parquet('./Data/df_recomendacion_usuario_user_id.parquet')
-
-
-# Consulta 'recomendacion_usuario(user_id: srt)'
-df_recomendacion_usuario_user_id = pd.read_parquet('./Data/df_recomendacion_usuario_user_id.parquet')
-'''
 
 
 app = FastAPI() #crea un objeto app(una instancia de FastAPI), que se usará para definir las rutas y las operaciones que realizará la API.
@@ -140,7 +127,9 @@ def read_root():
 @app.get('/developer/')
 def developer(desarrollador: str):
     try:
-        df_steam_games_developer_desarrollador = load_developer_data()
+        df_steam_games_developer_desarrollador = pd.read_parquet('./Data/df_steam_games_developer_desarrollador.parquet')
+
+        # df_steam_games_developer_desarrollador = load_developer_data()
 
         # Asegúrate de convertir 'release_date' a objetos datetime
         df_steam_games_developer_desarrollador['release_date'] = pd.to_datetime(df_steam_games_developer_desarrollador['release_date'], format='%Y-%m-%d')
@@ -150,6 +139,7 @@ def developer(desarrollador: str):
 
         # Filtrar el DataFrame para obtener registros de la empresa desarrolladora especificada
         df_desarrolladora = df_steam_games_developer_desarrollador[df_steam_games_developer_desarrollador['developer'] == desarrollador]
+        df_steam_games_developer_desarrollador = None
         del df_steam_games_developer_desarrollador
 
         # Calcular la cantidad de elementos por año
@@ -392,33 +382,25 @@ def recomendacion_juego(user_id: str):
     #user_similarity_df = pd.read_parquet('./Data/df_user_similarity.parquet')
     #user_item_matrix_df = pd.read_parquet('./Data/df_user_item_matrix.parquet')
     try:
-        user_similarity_df, user_item_matrix_df, df_recomendacion = load_recomendacion_usuario_data()
-
-        '''
-        # Crear una matriz de usuarios y juegos
-        columnas_a_mantener = ['user_id','item_id']
-        df_colaborativo = df_colaborativo[columnas_a_mantener]
-        user_item_matrix = df_colaborativo.pivot_table(index='user_id', columns='item_id', aggfunc=lambda x: 1, fill_value=0)
-
-        # Calcular similitud de coseno entre usuarios
-        user_similarity = cosine_similarity(user_item_matrix)
-        user_similarity_df = pd.DataFrame(user_similarity, index=user_item_matrix.index, columns=user_item_matrix.index)'''
+        # user_similarity_df, user_item_matrix_df, df_recomendacion = load_recomendacion_usuario_data()
 
         # Procesamos las Recomendaciones
 
         # Obtener las puntuaciones de similitud para el usuario especificado
+        user_similarity_df = pd.read_parquet('./Data/df_user_similarity.parquet')        
         user_scores = user_similarity_df.loc[user_id]
         user_similarity_df = None
         del user_similarity_df
 
-        # Ordenar los usuarios por similitud en orden descendente
-        user_scores = user_scores.sort_values(ascending=False)
-
         # Filtrar los juegos que el usuario ya ha jugado
+        user_item_matrix_df = pd.read_parquet('./Data/df_user_item_matrix.parquet')
         user_played_games = user_item_matrix_df.loc[user_id]
         already_played = user_played_games[user_played_games == 1].index
         user_played_games = None
         del user_played_games
+
+        # Ordenar los usuarios por similitud en orden descendente
+        user_scores = user_scores.sort_values(ascending=False)
 
         # Obtener recomendaciones para el usuario
         recommendations = user_item_matrix_df.columns.difference(already_played)
@@ -447,6 +429,7 @@ def recomendacion_juego(user_id: str):
         df_top5_recomendaciones['item_id'] = df_top5_recomendaciones['item_id'].astype(int)
 
         # Realizar la operación de merge
+        df_recomendacion = pd.read_parquet('./Data/df_recomendacion.parquet')
         df_top5_recomendaciones = df_top5_recomendaciones.merge(df_recomendacion[['item_id', 'item_name']], on='item_id')
         df_recomendacion = None
         del df_recomendacion
