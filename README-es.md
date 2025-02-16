@@ -3,7 +3,7 @@
 # <h1 align=center>**`Implementación de un Servidor de Consultas Steam`**</h1>
 
 <p align="center">
-    <img src="./src/steam_portada1.jpg"  height=450>    
+    <img src="./src/steam_portada1.jpg"  height=450>
 </p>
 <br>
 

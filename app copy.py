@@ -4,10 +4,9 @@
 
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-from fastapi.openapi.utils import get_openapi
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
-#import uvicorn # por ahora este servidor ASGI no se utiliza en local 
+import uvicorn #servidor ASGI(Asynchronous Server Gateway Interface)
 from collections import Counter
 
 # Funciones para cargar datos
@@ -57,9 +56,10 @@ def load_best_developer_year_data():
     )
  """
 
-app = FastAPI(docs_url="/docs", openapi_url="/openapi.json") # Configura las URLs de docs y openapi
+# app = FastAPI(docs_url="/docs", openapi_url="/openapi.json") # Configura las URLs de docs y openapi
 
-#app = FastAPI() # crea un objeto app(una instancia de FastAPI), que se usará para definir las rutas y las operaciones que realizará la API.
+app = FastAPI() # crea un objeto app(una instancia de FastAPI), que se usará para definir las rutas y las operaciones que realizará la API.
+
 
 # Ruta raíz con mensaje de bienvenida en HTML
 @app.get("/", response_class=HTMLResponse)
@@ -118,22 +118,6 @@ def read_root():
     """
     return welcome_message
 
-
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    openapi_schema = get_openapi(
-        title="Steam Queries API",
-        version="1.0",  # Reemplaza con tu versión
-        description="API for accessing Steam data",
-        routes=app.routes,
-    )
-    if "/" in openapi_schema["paths"]:
-        del openapi_schema["paths"]["/"]  # Oculta la ruta raíz de la documentación
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-app.openapi = custom_openapi
 
             ################################################
             ### CONSULTA 'developer(desarrollador: str)' ###
