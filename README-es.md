@@ -8,8 +8,8 @@
 <br>
 
 <p align="center">
-  Check out the live demo of this project  
-  <a href="https://simple-bank-dapp-fawn.vercel.app">HERE</a>
+  Prueba la demo en vivo de este project  
+  <a href="https://simple-bank-dapp-fawn.vercel.app">AQUÍ</a>
 </p>
 
 <p align="center">
