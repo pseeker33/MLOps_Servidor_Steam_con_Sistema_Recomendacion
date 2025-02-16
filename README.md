@@ -122,7 +122,7 @@ From these datasets, and applying **Data Preparation**, **Data Modeling** and **
 
 ## 4. Getting Started <a name="getting-started"></a>
 
-### ️ Installation
+### ️🛠️ Installation
 
 1. Clone the repository:
 
