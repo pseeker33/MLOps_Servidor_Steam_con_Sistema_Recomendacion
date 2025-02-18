@@ -27,7 +27,7 @@
 
 ## Tabla de Contenido
 
-1. **[Introducción](#1-introduccion)**
+1. **[Introducción](#1-introducción)**
 2. **[Alcance del Proyecto](#2-alcance-del-proyecto)**
 3. **[Estructura del Repositorio](#3-estructura-del-repositorio)**
 4. **[Cómo Empezar](#4-cómo-empezar)**
@@ -38,7 +38,7 @@
 
 <br>
 
-## 1. Introducción <a name="introduccion"></a>
+## **1. Introducción**
 
 **Breve Historia del Videojuego**
 
@@ -86,7 +86,7 @@ Es menester puntualizar que, si bien los grandes conglomerados de desarrolladore
 
 <br>
 
-## 2. Alcance del Proyecto <a name="alcance"></a>
+## **2. Alcance del Proyecto**
 
 Este proyecto tiene como objetivo **desarrollar un servidor de consultas online que acepte peticiones sobre los datos de los usuarios y los juegos disponibles en la plataforma digital Steam**.
 
@@ -99,7 +99,7 @@ A partir de estos datasets, y aplicando procesos de **Data Preparation**, **Data
 
 <br>
 
-## 3. Estructura del Repositorio <a name="estructura"></a>
+## **3. Estructura del Repositorio**
 
 <p align="center">  
     <img src="./src/estructura_repo.png"  height=500>    
@@ -178,7 +178,7 @@ A partir de estos datasets, y aplicando procesos de **Data Preparation**, **Data
 
 <br>
 
-## 6. Flujo de Trabajo <a name="flujo"></a>
+## **6. Flujo de Trabajo**
 
 ### Etapa de Data Preparation <a name="data_preparation"></a>
 
@@ -302,7 +302,7 @@ A continuación, se muestran capturas de la implementacion de los endpoints:
 
 
 
-## 7. Próximos Pasos <a name="proximos-pasos"></a>
+## **7. Próximos Pasos**
 
 *   Nuevas funcionalidades, como la búsqueda de juegos por género. 
 *   Mejorar la precisión del sistema de recomendación utilizando algoritmos más avanzados.
@@ -313,7 +313,7 @@ A continuación, se muestran capturas de la implementacion de los endpoints:
 <br>
 
 
-## 8. Contacto <a name="contacto"></a>
+## **8. Contacto**
 
 ¡Gracias por pasar!
 ¿Te pareció interesante el proyecto? Entonces no olvides regalarme una ⭐. Así me ayudas con la visualización de mi trabajo.
