@@ -33,7 +33,7 @@
 
 <br>
 
-## 1. Introduction <a name="introduction"></a>
+## **1. Introduction**
 
 **A Brief History of Video Games**
 
@@ -77,11 +77,11 @@ In this chain, development is the most important stage, because although it is s
 <br>
 
 It is important to point out that, although the large conglomerates of developers lead the video game market, leaving less room for small and medium-sized enterprises, it is also true that the dynamism that characterizes this industry, coupled with continuous technological advances, is currently creating and will continue to create new business opportunities. 
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
 
 <br>
 
-## 2. Project Scope <a name="project-scope"></a>
+## **2. Project Scope**
 
 This project aims to **develop an online query server that accepts requests for user data and games available on the Steam digital platform**.
 
@@ -89,11 +89,11 @@ To carry out this development, three raw datasets were used as a data source.
 
 From these datasets, and applying **Data Preparation**, **Data Modeling** and **Deployment** processes using Restful API, a query server was implemented in the form of a minimum viable product (MVP) that meets the essential development and deployment requirements.
 
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
 
 <br>
 
-## 3. Repository Structure <a name="repository-structure"></a>
+## **3. Repository Structure**
 
 <p align="center">  
     <img src="./src/estructura_repo.png"  height=500>      
@@ -116,11 +116,11 @@ From these datasets, and applying **Data Preparation**, **Data Modeling** and **
 **`src`**: Folder with source files (images, diagrams, etc.).
 
 **`requirements.txt`**: File with the list of dependencies needed for deployment on Render.
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
 
 <br>
 
-## 4. Getting Started <a name="getting-started"></a>
+## **4. Getting Started**
 
 ### ️🛠️ Installation
 
@@ -154,11 +154,11 @@ From these datasets, and applying **Data Preparation**, **Data Modeling** and **
     uvicorn app.main:app --reload
     ```
 
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
 
 <br>
 
-## 5. Tech Stack <a name="tech-stack"></a>
+## **5. Tech Stack**
 
 ![Static Badge](https://img.shields.io/badge/PYTHON%203-%233776AB?logo=python&labelColor=%231F1F1F)  
 ![Static Badge](https://img.shields.io/badge/JUPYTER%20NOTEBOOK-%23F37626?style=plastic&logo=jupyter&labelColor=%235C5C5C)  
@@ -168,11 +168,11 @@ From these datasets, and applying **Data Preparation**, **Data Modeling** and **
 ![Static Badge](https://img.shields.io/badge/FASTAPI-%23009688?style=plastic&logo=fastapi&logoColor=%23009688&labelColor=%235C5C5C)  
 ![Static Badge](https://img.shields.io/badge/UVICORN-%23499848?style=plastic&logo=gunicorn&logoColor=%23499848&labelColor=%235C5C5C) 
 
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
 
 <br>
 
-## 6. Workflow <a name="workflow"></a>
+## **6. Workflow**
 
 ### Data Preparation Stage <a name="data_preparation"></a>
 
@@ -289,21 +289,21 @@ Below are captures of the implementation of the endpoints:
     </div>
 </div>
 
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
 
 <br>
 
-## 7. Next Steps <a name="next-steps"></a>
+## **7. Next Steps**
 
 *   New functionalities, such as searching for games by genre. 
 *   Improve the accuracy of the recommendation system using more advanced algorithms.
 *   Optimize the performance of the API to support a greater number of requests.
 
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
 
 <br>
 
-## 8. Contact <a name="contact"></a>
+## **8. Contact**
 
 Thank you for stopping by!
 Did you find the project interesting? Then don't forget to give me a ⭐. This helps me with the visibility of my work.
@@ -314,4 +314,4 @@ Do you have an idea in mind or found a bug? Please open an issue or start a disc
 [![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2Fpseeker222&label=%40pseeker222)](https://twitter.com/pseeker222)
 [![Follow us on LinkedIn](https://img.shields.io/badge/LinkedIn-pseeker-blue?style=flat&logo=linkedin&logoColor=b0c0c0&labelColor=363D44)](https://www.linkedin.com/in/hoover-zavala-63a64825b/)
 
-<span style="float:right;">[arriba](#tabla-de-contenido)</span> 
+<span style="float:right;">[top](#table-of-contents)</span> 
